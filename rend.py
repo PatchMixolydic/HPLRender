@@ -25,6 +25,9 @@ def getDataFilenames(directory):
 def rendData(filename):
     """
     Turns HPL data files into useable output.
+    Note the name -- this is probably not the best way to do this.
+    The best solution would probably involves regexes, which I don't know and
+    probably can't learn in the short amount of time I've given myself.
     :return: A list of HPLResults containing data.
     """
     results = []
