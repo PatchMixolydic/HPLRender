@@ -2,7 +2,7 @@
 import os, json
 from HPLResult import HPLResult
 
-HeaderLength = 1900 # characters
+HeaderLength = 1711 # characters
 
 ResultEncodedTime = 0
 ResultN = 1
