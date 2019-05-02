@@ -59,9 +59,14 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--statistic", help = "The result property used for finding the best bin on average (required)", choices = HPLResult.NameToGetter.keys(), required = True)
     parser.add_argument("-o", "--output", help = "Where to output the results, defaults to stdout")
     parser.add_argument("-v", "--verbose", action = "store_true", help = "When used, outputs the results sorted into bins")
+    parser.add_argument("-t", "--title", help = "Title for this run")
     args = parser.parse_args()
+
+    # Get some necessary data based off the arguments
     binFunc = HPLResult.NameToGetter.get(args.bin)
     statFunc = HPLResult.NameToGetter.get(args.statistic)
+    binName = HPLResult.NameToDisplayName.get(args.bin)
+    statName = HPLResult.NameToDisplayName.get(args.statistic)
 
     # Process data
     binnedResults = binResultsBy(rend.rendData(args.input), binFunc)
@@ -76,13 +81,16 @@ if __name__ == "__main__":
     else: # No output file, write to stdout
         write = lambda x: print(x)
 
-    write("Results for {}".format(args.input))
+    if args.title:
+        write("Results for {}".format(args.title))
+    else:
+        write("Results for {}".format(args.input))
     if args.verbose:
         write("Arguments to HPLResult are defined as follows:")
         write("Encoded time, N, NB, P, Q, Time, Gigaflops, Start time, End time")
     write("")
 
-    write("Results are binned by {}".format(args.bin))
+    write("Results are binned by {}".format(binName))
     write("")
 
     if args.verbose:
@@ -90,11 +98,11 @@ if __name__ == "__main__":
         write(pprint.pformat(binnedResults))
         write("")
 
-    write("Minimum, maximum, and average {} per bin".format(args.statistic))
+    write("Minimum, maximum, and average {} per bin".format(statName))
     write(pprint.pformat(minMaxAvg))
     write("")
 
-    write("Best bin with respect to {}".format(args.statistic))
+    write("Best bin with respect to {}".format(statName))
     write(bestBin)
 
     # Clean up the output file if we opened it
