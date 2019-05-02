@@ -55,8 +55,8 @@ if __name__ == "__main__":
     # Set up argument values
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help = "HPL output file to analyze")
-    parser.add_argument("-b", "--bin", help = "The result property used for binning the output (required)", choices = HPLResult.NameToGetter.keys(), required = True)
-    parser.add_argument("-s", "--statistic", help = "The result property used for finding the best bin on average (required)", choices = HPLResult.NameToGetter.keys(), required = True)
+    parser.add_argument("-s", "--statistic", help = "The result property used for finding the best bin on average (required)", choices = HPLResult.GetterCommandLineNames, required = True)
+    parser.add_argument("-b", "--bin", help = "The result property used for binning the output (default: null binning function)", choices = HPLResult.NameToGetter.keys())
     parser.add_argument("-o", "--output", help = "Where to output the results, defaults to stdout")
     parser.add_argument("-v", "--verbose", action = "store_true", help = "When used, outputs the results sorted into bins")
     parser.add_argument("-t", "--title", help = "Title for this run")

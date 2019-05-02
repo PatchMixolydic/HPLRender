@@ -6,7 +6,8 @@ NameToDisplayName = {
     "p": "Number of matrix rows",
     "q": "Number of matrix columns",
     "time": "Time to solve",
-    "gflops": "GigaFLOPS"
+    "gflops": "GigaFLOPS",
+    None: "nothing"
 }
 
 class HPLResult:
@@ -80,5 +81,8 @@ NameToGetter = {
     "p": HPLResult.getP,
     "q": HPLResult.getQ,
     "time": HPLResult.getTime,
-    "gflops": HPLResult.getGflops
+    "gflops": HPLResult.getGflops,
+    None: lambda x: 0
 }
+GetterCommandLineNames = list(NameToGetter.keys())
+GetterCommandLineNames.remove(None)
