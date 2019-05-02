@@ -10,7 +10,6 @@ if __name__ == "__main__":
     parser.add_argument("input", help = "HPL output file to analyze")
     parser.add_argument("-b", "--bin", help = "The result property used for binning the output (required)", choices = HPLResult.GetterCommandLineNames, required = True)
     parser.add_argument("-s", "--statistic", help = "The result property used for finding the best bin on average (required)", choices = HPLResult.GetterCommandLineNames, required = True)
-    parser.add_argument("-v", "--verbose", action = "store_true", help = "When used, outputs the results sorted into bins")
     parser.add_argument("-t", "--title", help = "Title for this run")
     args = parser.parse_args()
     binFunc = HPLResult.NameToGetter.get(args.bin)
