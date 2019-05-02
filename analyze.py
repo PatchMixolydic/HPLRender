@@ -2,7 +2,7 @@
 import argparse, pprint, statistics
 from collections import defaultdict
 import rend
-from HPLResult import HPLResult
+import HPLResult
 
 # For minMaxAvgPerBin
 MMAMin = 0
@@ -52,34 +52,28 @@ def getBestBin(binnedResults, statFunction, lowerIsBetter):
     return bins[0] # return the 0th element, which is the best
 
 if __name__ == "__main__":
-    NameToGetter = { # maps names of properties of HPLResult to getters for HPLResult.
-        "encodedtime": HPLResult.getEncodedTime,
-        "n": HPLResult.getN,
-        "nb": HPLResult.getNB,
-        "p": HPLResult.getP,
-        "time": HPLResult.getTime,
-        "gflops": HPLResult.getGflops
-    }
-
+    # Set up argument values
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help = "HPL output file to analyze")
-    parser.add_argument("-b", "--bin", help = "The result property used for binning the output (required)", choices = NameToGetter.keys(), required = True)
-    parser.add_argument("-s", "--statistic", help = "The result property used for finding the best bin on average (required)", choices = NameToGetter.keys(), required = True)
+    parser.add_argument("-b", "--bin", help = "The result property used for binning the output (required)", choices = HPLResult.NameToGetter.keys(), required = True)
+    parser.add_argument("-s", "--statistic", help = "The result property used for finding the best bin on average (required)", choices = HPLResult.NameToGetter.keys(), required = True)
     parser.add_argument("-o", "--output", help = "Where to output the results, defaults to stdout")
     parser.add_argument("-v", "--verbose", action = "store_true", help = "When used, outputs the results sorted into bins")
     args = parser.parse_args()
-    binFunc = NameToGetter.get(args.bin)
-    statFunc = NameToGetter.get(args.statistic)
+    binFunc = HPLResult.NameToGetter.get(args.bin)
+    statFunc = HPLResult.NameToGetter.get(args.statistic)
 
+    # Process data
     binnedResults = binResultsBy(rend.rendData(args.input), binFunc)
     minMaxAvg = minMaxAvgPerBin(binnedResults, statFunc)
-    bestBin = getBestBin(binnedResults, statFunc, statFunc == HPLResult.getTime)
+    bestBin = getBestBin(binnedResults, statFunc, statFunc == HPLResult.HPLResult.getTime)
 
+    # Write output
     outFile = None
-    if args.output:
+    if args.output: # We have an output file, write to it
         outFile = open(args.output, 'w')
         write = lambda x: outFile.write(str(x) + "\n")
-    else:
+    else: # No output file, write to stdout
         write = lambda x: print(x)
 
     write("Results for {}".format(args.input))
@@ -103,6 +97,7 @@ if __name__ == "__main__":
     write("Best bin with respect to {}".format(args.statistic))
     write(bestBin)
 
+    # Clean up the output file if we opened it
     if outFile:
         outFile.close()
     del outFile

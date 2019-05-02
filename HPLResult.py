@@ -1,3 +1,14 @@
+# maps command line names to displayable names for the graph
+NameToDisplayName = {
+    "encodedTime": "Encoded time",
+    "n": "Problem size",
+    "nb": "Block size",
+    "p": "Number of matrix rows",
+    "q": "Number of matrix columns",
+    "time": "Time to solve",
+    "gflops": "GigaFLOPS"
+}
+
 class HPLResult:
     """
     Stores data about an HPL result from a run.
@@ -46,6 +57,9 @@ class HPLResult:
     def getP(self):
         return self.p
 
+    def getQ(self):
+        return self.q
+
     def getTime(self):
         return self.time
 
@@ -57,3 +71,14 @@ class HPLResult:
 
     def getEndTime(self):
         return self.endTime
+
+# maps names of properties of HPLResult to getters for HPLResult.
+NameToGetter = {
+    "encodedtime": HPLResult.getEncodedTime,
+    "n": HPLResult.getN,
+    "nb": HPLResult.getNB,
+    "p": HPLResult.getP,
+    "q": HPLResult.getQ,
+    "time": HPLResult.getTime,
+    "gflops": HPLResult.getGflops
+}
