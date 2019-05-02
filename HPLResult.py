@@ -20,8 +20,13 @@ class HPLResult:
             "{}        {}   {}     {}     {}             {}             {}\n"
             "start time {}\n"
             "end time {}\n"
-        ).format(self.encodedTime, self.n, self.nb, self.p, self.q, self.time, self.gflops, self.start, self.end)
+        ).format(self.encodedTime, self.n, self.nb, self.p, self.q, self.time, self.gflops, self.startTime, self.endTime)
         return output
+
+    def __repr__(self):
+        return "HPLResult({}, {}, {}, {}, {}, {}, {}, {})".format(
+            self.encodedTime, self.n, self.nb, self.p, self.q, self.time, self.gflops, self.startTime, self.endTime
+        )
 
     """
     The following getters are meant to be used for organizing HPLResults into bins.

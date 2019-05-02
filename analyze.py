@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import statistics
+import argparse, pprint, statistics
 from collections import defaultdict
 import rend
 from HPLResult import HPLResult
@@ -50,3 +50,59 @@ def getBestBin(binnedResults, statFunction, lowerIsBetter):
     # Sort the bins based on their average values, where the 0th element is the best.
     bins.sort(key = lambda x: minMaxAvg.get(x)[MMAAvg], reverse = not lowerIsBetter)
     return bins[0] # return the 0th element, which is the best
+
+if __name__ == "__main__":
+    NameToGetter = { # maps names of properties of HPLResult to getters for HPLResult.
+        "encodedtime": HPLResult.getEncodedTime,
+        "n": HPLResult.getN,
+        "nb": HPLResult.getNB,
+        "p": HPLResult.getP,
+        "time": HPLResult.getTime,
+        "gflops": HPLResult.getGflops
+    }
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input", help = "HPL output file to analyze")
+    parser.add_argument("-b", "--bin", help = "The result property used for binning the output (required)", choices = NameToGetter.keys(), required = True)
+    parser.add_argument("-s", "--statistic", help = "The result property used for finding the best bin on average (required)", choices = NameToGetter.keys(), required = True)
+    parser.add_argument("-o", "--output", help = "Where to output the results, defaults to stdout")
+    parser.add_argument("-v", "--verbose", action = "store_true", help = "When used, outputs the results sorted into bins")
+    args = parser.parse_args()
+    binFunc = NameToGetter.get(args.bin)
+    statFunc = NameToGetter.get(args.statistic)
+
+    binnedResults = binResultsBy(rend.rendData(args.input), binFunc)
+    minMaxAvg = minMaxAvgPerBin(binnedResults, statFunc)
+    bestBin = getBestBin(binnedResults, statFunc, statFunc == HPLResult.getTime)
+
+    outFile = None
+    if args.output:
+        outFile = open(args.output, 'w')
+        write = lambda x: outFile.write(str(x) + "\n")
+    else:
+        write = lambda x: print(x)
+
+    write("Results for {}".format(args.input))
+    if args.verbose:
+        write("Arguments to HPLResult are defined as follows:")
+        write("Encoded time, N, NB, P, Q, Time, Gigaflops, Start time, End time")
+    write("")
+
+    write("Results are binned by {}".format(args.bin))
+    write("")
+
+    if args.verbose:
+        write("Binned results")
+        write(pprint.pformat(binnedResults))
+        write("")
+
+    write("Minimum, maximum, and average {} per bin".format(args.statistic))
+    write(pprint.pformat(minMaxAvg))
+    write("")
+
+    write("Best bin with respect to {}".format(args.statistic))
+    write(bestBin)
+
+    if outFile:
+        outFile.close()
+    del outFile
