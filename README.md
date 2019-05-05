@@ -29,7 +29,7 @@ by default)
 * --verbose, which will add the binned results to the output
 
 For instance, to analyze a run to see the time it took to solve each problem,
-you would use `./analyze.py --statistic time --verbose --output timeTaken.txt HPL.dat`.
+you would use `./analyze.py --statistic time --verbose --output timeTaken.txt HPL.out`.
 
 ### graph.py
 graph.py requires 3 arguments:
@@ -48,4 +48,4 @@ There's also the optional argument --title, which will add a run title in
 parentheses after the regular graph title.
 
 For instance, to visualize how many gigaFLOPS the system pulled per problem for
-several block sizes, you would use `./graph.py --bin nb --statistic gflops HPL.dat`. 
+several block sizes, you would use `./graph.py --bin nb --statistic gflops HPL.out`. 
